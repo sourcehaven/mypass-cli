@@ -25,11 +25,13 @@ def mypass():
 
 @mypass.command()
 def cls():
+    """Clears screen. Alias for "clear" command."""
     clear_screen()
 
 
 @mypass.command()
 def clear():
+    """Clears screen. Alias for "cls" command."""
     clear_screen()
 
 
@@ -37,6 +39,7 @@ def clear():
 @click.option('--host', '-h', is_flag=True, default=False, help='Print server host.')
 @click.option('--port', '-p', is_flag=True, default=False, help='Print server port.')
 def config(host: bool, port: bool):
+    """Display config settings."""
     if not host and not port:
         with open(DEFAULT_PATH, 'r') as file:
             config_contents = file.read()
@@ -54,6 +57,7 @@ def config(host: bool, port: bool):
 @click.option('--host', '-h', type=str, help='Set server host.')
 @click.option('--port', '-p', type=int, help='Set server port.')
 def set_config(host: str, port: int):
+    """Set config settings."""
     if host is None and port is None:
         webbrowser.open(str(DEFAULT_PATH))
     else:
@@ -79,7 +83,7 @@ def set_config(host: str, port: int):
 @click.option('--prompt-password', '-pp', type=bool, is_flag=True, help='Secure prompt for password.')
 @click.option('--site', '-s', type=str, help='Site for the entry.')
 def add(name: str, email: str, username: str, password: str, prompt_password: bool, site: str):
-    """Add an entry to the password store"""
+    """Add an entry to the password vault."""
 
     if prompt_password and password is not None:
         raise click.ClickException('--password must not be used along with --prompt-password flag')
@@ -104,7 +108,7 @@ def add(name: str, email: str, username: str, password: str, prompt_password: bo
 @click.option('--special', is_flag=True, default=True, help='Include special characters.')
 def generate(name: str, email: str, username: str, site: str, length: int, special: bool):
     """
-    Add an entry to the password store with auto generated password.
+    Add an entry to the password vault with auto generated password.
 
     Copies generated password to clipboard.
     """
@@ -120,7 +124,7 @@ def generate(name: str, email: str, username: str, site: str, length: int, speci
 @mypass.command()
 @click.argument('name', type=str, nargs=-1)
 def delete(name):
-    """Remove an entry from the password store"""
+    """Remove an entry from the password vault."""
     if not name:
         error_text = Text("Please provide at least one entry name to delete", style="bold red")
         console.print(error_text)
@@ -131,7 +135,7 @@ def delete(name):
 @mypass.command()
 @click.argument('name', type=str, nargs=-1)
 def show(name: str):
-    """Show entries from the password store"""
+    """Show entries from the password vault."""
     if name:
         click.echo(f"Showing entry: {', '.join(name)}")
     else:
@@ -145,7 +149,7 @@ def show(name: str):
 @click.option('--password', '-p', is_flag=True, help='Copy password')
 @click.option('--site', '-s', is_flag=True, help='Copy site')
 def copy(all: bool, email: bool, username: bool, password: bool, site: bool):
-    """Copy entry credentials to the clipboard"""
+    """Copy entry credentials to the clipboard."""
     if all:
         click.echo("Copying all credentials")
     elif email:
@@ -167,7 +171,7 @@ def copy(all: bool, email: bool, username: bool, password: bool, site: bool):
 @click.option('--password', '-p', type=str, help='Change password')
 @click.option('--site', '-s', type=str, help='Change site')
 def change(name: str, email: str, username: str, password: str, site: str):
-    """Change password manager entry"""
+    """Change password manager entry."""
     click.echo(f"Changing entry: {name}")
     click.echo(f"Email: {email}")
     click.echo(f"Username: {username}")
