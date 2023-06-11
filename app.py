@@ -2,20 +2,21 @@ from argparse import ArgumentParser
 from typing import Union
 
 from mypass.cli import mypass
-from mypass.config import set_config, get_config, config_app
+from mypass.config import write_config, read_config, set_app
 
 
 def run(host: Union[str, None], port: Union[int, None]):
     if host is None or port is None:
-        conf = get_config()
+        conf = read_config()
 
         if host is None:
             host = conf['SERVER']['host']
         if port is None:
-            port = conf['SERVER']['port']
+            port = int(conf['SERVER']['port'])
 
-    set_config(host=host, port=port)
-    config_app(host=host, port=port)
+    write_config(host=host, port=port)
+    set_app(host=host, port=port)
+
     mypass()
 
 

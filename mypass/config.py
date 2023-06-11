@@ -1,16 +1,17 @@
 import configparser
 from pathlib import Path
 
-from mypass_logman import signin, logout, session
+import click
+import rich
+from mypass_logman import login, logout, session
 from mypass_requests import MyPassRequests
-
 
 DEFAULT_PATH = Path.home().joinpath('.mypass', 'config.ini')
 DEFAULT_HOST = 'http://localhost'
 DEFAULT_PORT = 5757
 
 
-def set_config(host=DEFAULT_HOST, port=DEFAULT_PORT):
+def write_config(host=DEFAULT_HOST, port=DEFAULT_PORT):
     DEFAULT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     parser = configparser.ConfigParser()
@@ -23,9 +24,9 @@ def set_config(host=DEFAULT_HOST, port=DEFAULT_PORT):
         parser.write(f)
 
 
-def get_config():
+def read_config():
     if not Path(DEFAULT_PATH).exists():
-        set_config()
+        write_config()
 
     parser = configparser.ConfigParser()
     parser.read(DEFAULT_PATH)
@@ -39,11 +40,20 @@ def get_config():
     return ini_data
 
 
-def config_app(host: str, port: int):
+def login_with_prompt(*args, **kwargs):
+    pw = click.prompt(text='Enter master password', hide_input=True)
+    login(pw, *args, **kwargs)
+
+
+def logout_with_feedback(*args, **kwargs):
+    logout(*args, **kwargs)
+    rich.print('[green]Logged out successfully![/green]')
+
+
+def set_app(host: str, port: int):
     app = MyPassRequests()
     app.config.host = host
     app.config.port = port
     app.config.logout = logout
-    app.config.signin = signin
+    app.config.login = login
     app.config.session = session
-    return app
