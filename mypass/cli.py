@@ -9,9 +9,10 @@ from rich.console import Console
 from rich.text import Text
 
 from mypass_requests import update_master_pw
+from rich.tree import Tree
 
 from mypass.config import DEFAULT_PATH
-from mypass.util import clear_screen
+from mypass.util import clear_screen, build_hierarchy, build_tree
 
 console = Console()
 
@@ -105,13 +106,23 @@ def delete(name):
 
 
 @vault.command()
-@click.argument('name', type=str, nargs=-1)
-def show(name: str):
+def show():
     """Show entries from the password vault."""
-    if name:
-        click.echo(f"Showing entry: {', '.join(name)}")
-    else:
-        click.echo("Showing all entries")
+    example_docs = [
+        {'name': 'personal/gmail'},
+        {'name': 'personal/facebook'},
+        {'name': 'personal/twitter'},
+        {'name': 'work/outlook'},
+        {'name': 'work/gmail'}
+    ]
+
+    entries = [doc['name'] for doc in example_docs]
+
+    tree = Tree('Vault entries')
+
+    entry_hierarchy = build_hierarchy(entries)
+    build_tree(tree, entry_hierarchy)
+    rich.print(tree)
 
 
 @vault.command()
