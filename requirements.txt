@@ -1,6 +1,11 @@
-rich~=13.4.1
-click~=8.1.3
-click_shell~=2.1
+rich~=13.5.2
+click~=8.1.6
+prompt_toolkit~=3.0.39
 pyperclip~=1.8.2
+pyyaml~=6.0.1
 ../mypass-requests
 ../mypass-logman
+../mypass-tokens
+
+Pygments~=2.15.1
+setuptools~=65.5.1
